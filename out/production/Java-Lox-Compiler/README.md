@@ -1,2 +1,2 @@
-# Java-Lox-Compiler
-Implementation of Lox Compiler in Java
+# Java-com.craftinginterpreters.lox.Lox-Compiler
+Implementation of com.craftinginterpreters.lox.Lox Compiler in Java

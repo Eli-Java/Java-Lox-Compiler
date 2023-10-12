@@ -1,0 +1,107 @@
+Step 1: This is the Visitor Interface
+interface Visitor<R> {
+        R visitAssignExpr(Assign expr);
+        R visitBinaryExpr(Binary expr);
+        R visitCallExpr(Call expr);
+        R visitGetExpr(Get expr);
+        R visitGroupingExpr(Grouping expr);
+        R visitLiteralExpr(Literal expr);
+        R visitLogicalExpr(Logical expr);
+        R visitSetExpr(Set expr);
+        R visitSuperExpr(Super expr);
+        R visitThisExpr(This expr);
+        R visitUnaryExpr(Unary expr);
+        R visitVariableExpr(Variable expr);
+}
+
+Step 2: The AstPrinter implements the Visitor Pattern
+class AstPrinter implements Visitor<String> {
+}
+
+Step 3: That means the AstPrinter must define all these functions
+class AstPrinter implements Visitor<String> {
+  @Override
+  public String visitAssignExpr(Expr.Assign expr) {
+    return parenthesize2("=", expr.name.lexeme, expr.value);
+  }
+//< Statements and State omit
+
+  @Override
+  public String visitBinaryExpr(Expr.Binary expr) {
+    return parenthesize(expr.operator.lexeme,
+                        expr.left, expr.right);
+  }
+//> Functions omit
+
+  @Override
+  public String visitCallExpr(Expr.Call expr) {
+    return parenthesize2("call", expr.callee, expr.arguments);
+  }
+//< Functions omit
+//> Classes omit
+
+  @Override
+  public String visitGetExpr(Expr.Get expr) {
+    return parenthesize2(".", expr.object, expr.name.lexeme);
+  }
+//< Classes omit
+
+  @Override
+  public String visitGroupingExpr(Expr.Grouping expr) {
+    return parenthesize("group", expr.expression);
+  }
+
+  @Override
+  public String visitLiteralExpr(Expr.Literal expr) {
+    if (expr.value == null) return "nil";
+    return expr.value.toString();
+  }
+//> Control Flow omit
+
+  @Override
+  public String visitLogicalExpr(Expr.Logical expr) {
+    return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+  }
+//< Control Flow omit
+//> Classes omit
+
+  @Override
+  public String visitSetExpr(Expr.Set expr) {
+    return parenthesize2("=",
+        expr.object, expr.name.lexeme, expr.value);
+  }
+//< Classes omit
+//> Inheritance omit
+
+  @Override
+  public String visitSuperExpr(Expr.Super expr) {
+    return parenthesize2("super", expr.method);
+  }
+//< Inheritance omit
+//> Classes omit
+
+  @Override
+  public String visitThisExpr(Expr.This expr) {
+    return "this";
+  }
+//< Classes omit
+
+  @Override
+  public String visitUnaryExpr(Expr.Unary expr) {
+    return parenthesize(expr.operator.lexeme, expr.right);
+  }
+//> Statements and State omit
+
+  @Override
+  public String visitVariableExpr(Expr.Variable expr) {
+    return expr.name.lexeme;
+  }
+}
+
+Step 4: For recursive structures, we defined the parenthesize method to recursively parenthesize
+subexpressions
+
+Step 5: To use the visitor pattern with AstPrinter, we can just say
+//Expr.accept(AstPrinter) so eg if our expr is named binary_expr and is of type Binary,
+//we can just say binary_expr.accept(AstPrinter)
+//this will in turn invoke AstPrinter.visitBinaryExpr(this);

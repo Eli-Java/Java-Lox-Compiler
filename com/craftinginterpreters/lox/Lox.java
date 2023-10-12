@@ -1,3 +1,5 @@
+package com.craftinginterpreters.lox;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,6 +10,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Lox {
+    static boolean hadError = false;
+
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: jlox [script]");
@@ -37,13 +41,20 @@ public class Lox {
 
     private static void run(String source) {
         System.out.println(source);
-        /*
-        Scanner scanner = new Scanner(source);
-        List<Token> tokens = scanner.scanTokens();
+        com.craftinginterpreters.lox.Scanner scanner = new com.craftinginterpreters.lox.Scanner(source);
+        List<com.craftinginterpreters.lox.Token> tokens = scanner.scanTokens();
 // For now, just print the tokens.
-        for (Token token : tokens) {
+        for (com.craftinginterpreters.lox.Token token : tokens) {
             System.out.println(token);
         }
-         */
+    }
+
+    static void error(int line, String message) {
+        report(line, "", message);
+    }
+
+    private static void report(int line, String where, String message) {
+        System.err.println("[line " + line + "] Error" + where + ": " + message);
+        hadError = true;
     }
 }
